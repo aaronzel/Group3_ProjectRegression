@@ -69,7 +69,7 @@ correlationsDefault %>% ggplot(aes(x=reorder(rownames(correlationsDefault), corr
 ### Logistic Regression 
 
 ```{r}
-logisticM1 <- glm (default ~ listing_term + total_inquiries + borrower_rate + listing_monthly_payment + amount_funded + real_estate_balance + stated_monthly_income + number_of_days, data = data, family = "binomial")
+logisticM1 <- glm (default ~ number_of_days + principal_balance + amount_funded, data = data, family = "binomial")
 summary(logisticM1)
 ```
 
