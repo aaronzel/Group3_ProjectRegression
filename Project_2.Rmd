@@ -6,21 +6,17 @@ output:
   html_document:
     code_folding: hide
 ---
-### Introduction 
-**Context:** 
 
-**Audience:** 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 
-**Key Question:** 
-
-
-
-### Basic Exploration 
-
-```{r}
 data <- read.csv("ProjectA_Listings2013.csv")
+library("ggplot2")
+library("stats")
+library("dplyr")
+
 str(data)
-summary(data)
+summary(data) 
 
 #factorize 
 data$loan_status <- as.factor(data$loan_status)
@@ -36,6 +32,30 @@ data$lender_indicator <- as.factor(data$lender_indicator)
 data$is_homeowner <- as.factor(data$is_homeowner)
 ```
 
+## {.tabset}
+### Introduction 
+**Context:** 
+
+**Audience:** 
+
+**Key Question:** 
+
+
+### Basic Exploration 
+
+```{r, warning = FALSE}
+data$default <- ifelse(data$loan_status == 3, 1, 0)
+
+correlationsRates <- as.data.frame(cor(data[sapply(data, function(x) is.numeric(x))])[4,])
+correlationsRates %>% ggplot(aes(x=reorder(rownames(correlationsRates), correlationsRates[,1]), y=correlationsRates[,1])) + 
+  geom_bar(stat = 'identity') + ggtitle("Correlations with Interest Rate") + labs(x="Variables", y="Correlation") + theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle = 90))
+
+
+correlationsDefault <- as.data.frame(cor(data[sapply(data, function(x) is.numeric(x))])[,35])
+correlationsDefault %>% ggplot(aes(x=reorder(rownames(correlationsDefault), correlationsDefault[,1]), y=correlationsDefault[,1])) + 
+  geom_bar(stat = 'identity') + ggtitle("Correlations with Default") + labs(x="Variables", y="Correlation") + theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle = 90))
+```
+
 
 
 
@@ -49,7 +69,8 @@ data$is_homeowner <- as.factor(data$is_homeowner)
 ### Logistic Regression 
 
 ```{r}
-
+logisticM1 <- glm (default ~ listing_term + total_inquiries + borrower_rate + listing_monthly_payment + amount_funded + real_estate_balance + stated_monthly_income + number_of_days, data = data, family = "binomial")
+summary(logisticM1)
 ```
 
 
