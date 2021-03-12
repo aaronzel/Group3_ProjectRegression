@@ -17,6 +17,26 @@ output:
 
 ### Basic Exploration 
 
+```{r}
+data <- read.csv("ProjectA_Listings2013.csv")
+str(data)
+summary(data)
+
+#factorize 
+data$loan_status <- as.factor(data$loan_status)
+data$total_open_revolving_accounts <- as.factor(data$loan_status_description)
+data$prosper_score <- as.factor(data$prosper_score)
+data$income_range <- as.factor(data$income_range)
+data$income_range_description <- as.factor(data$income_range_description)
+data$income_verifiable <- as.factor(data$income_verifiable)
+data$employment_status_description <- as.factor(data$employment_status_description)
+data$occupation <- as.factor(data$occupation)
+data$borrower_state <- as.factor(data$borrower_state)
+data$lender_indicator <- as.factor(data$lender_indicator)
+data$is_homeowner <- as.factor(data$is_homeowner)
+```
+
+
 
 
 
@@ -27,6 +47,11 @@ output:
 
 
 ### Logistic Regression 
+
+```{r}
+
+```
+
 
 
 
