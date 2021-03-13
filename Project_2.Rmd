@@ -15,6 +15,7 @@ library("ggplot2")
 library("stats")
 library("dplyr")
 
+
 str(data)
 summary(data) 
 
@@ -43,7 +44,17 @@ data$is_homeowner <- as.factor(data$is_homeowner)
 
 ### Basic Exploration 
 
+The goal of this analysis is to identify arbitrage opportunities. We want to look if there are elements that the market does not consider a risk factor - but it actually is, or if there are elements that market considers a risk factor but actually it isn’t. This way, we can construct a way to build portfolio that always have positive return with zero net investment by taking advantage of the inefficiencies in the market.
+
+But first, lets start by looking at the data as a whole. The two most important responses that we wanted to look at are the interest rates and the loan status - whether the borrower defaults or not. Correlations between the two responses and other variables can be helpful in determining which variable is significant in determining the interest rate or whether a borrower defaults. 
+
 ```{r, warning = FALSE}
+
+#remove observations with NA's
+any(is.na(data$months_employed))
+any(is.na(data$installment_balance))
+data <- data[complete.cases(data), ]
+
 data$default <- ifelse(data$loan_status == 3, 1, 0)
 
 correlationsRates <- as.data.frame(cor(data[sapply(data, function(x) is.numeric(x))])[4,])
@@ -52,10 +63,13 @@ correlationsRates %>% ggplot(aes(x=reorder(rownames(correlationsRates), correlat
 
 
 correlationsDefault <- as.data.frame(cor(data[sapply(data, function(x) is.numeric(x))])[,35])
-correlationsDefault %>% ggplot(aes(x=reorder(rownames(correlationsDefault), correlationsDefault[,1]), y=correlationsDefault[,1])) + 
+correlationsDefault %>% ggplot(aes(x=reorder(rownames(correlationsDefault)[], correlationsDefault[,1]), y=correlationsDefault[,1])) + 
   geom_bar(stat = 'identity') + ggtitle("Correlations with Default") + labs(x="Variables", y="Correlation") + theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle = 90))
 ```
 
+The graphs above show the correlation between the two responses of interest against other variables in the dataset. The leftmost variables are the variables that move in the opposite direction of the variables of interest, ordered in decreasing magnitude, while the rightmost variables are the ones that move in the same direction as the variables of interest, ordered in increasing magnitude. With this graph, we get to see which variables might be good in interpreting the responses. 
+
+We have to note that the magnitude of the correlation is what matters in predicting which variables have a significant impact on the response variables. Negative correlations with high magnitude is likely to produce more predictive power than variables with almost zero correlation with the response.
 
 
 
