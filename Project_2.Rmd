@@ -86,7 +86,7 @@ ggplot(data=data, aes(x=as.logical(default), y = borrower_rate, colour=borrower_
 ```
 The data above shows that people who defaulted received higher borrowing rate. This is due to the fact that the lender charged the borrower for the credit risk that they took. The more likely the person is to default, the more that the borrower needs to pay upfront so that in case the borrower defaults, the extra rate that the lender charged can cover a portion of the loss from the default.
 
-How about the states? Does the state 
+
 ```{r}
 baseplot <- ggplot(data = data, aes(x=bankcard_utilization, y = borrower_rate, colour=borrower_rate))
 baseplot+geom_smooth()
