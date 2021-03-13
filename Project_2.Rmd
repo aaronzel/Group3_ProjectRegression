@@ -72,7 +72,26 @@ The graphs above show the correlation between the two responses of interest agai
 We have to note that the magnitude of the correlation is what matters in predicting which variables have a significant impact on the response variables. Negative correlations with high magnitude is likely to produce more predictive power than variables with almost zero correlation with the response.
 
 
+Now, lets take a further look into the variables potentially have a significant effect on the responses.
 
+```{r}
+ggplot(data=data, aes(x=amount_funded, y = borrower_rate, colour=borrower_rate)) + geom_jitter(alpha = 0.25)
+
+
+```
+The data shows that as the amount funded increases, the borrower rate decreases.
+
+```{r, warning = FALSE}
+ggplot(data=data, aes(x=as.logical(default), y = borrower_rate, colour=borrower_rate)) + geom_boxplot() + xlab("Defaulted") + ylab("Borrower Rate")
+```
+The data above shows that people who defaulted received higher borrowing rate. This is due to the fact that the lender charged the borrower for the credit risk that they took. The more likely the person is to default, the more that the borrower needs to pay upfront so that in case the borrower defaults, the extra rate that the lender charged can cover a portion of the loss from the default.
+
+How about the states? Does the state 
+```{r}
+baseplot <- ggplot(data = data, aes(x=bankcard_utilization, y = borrower_rate, colour=borrower_rate))
+baseplot+geom_smooth()
+```
+In the graph above, we can see that the borrower rate increase as the back card utilization increase. This is most likely due to reason that people who utilize bank card a lot is seen as financially distressed and more likely to default, therefore the credit risk is higher on these people. However, we can also see that when the bank card utilization is fairly low, the borrower rate actually decreases as the utilization increases. This might be because the bank encourages the utilization of the card by offering initiative to lower the borrowing rate to customers who utilize credit card until a certain point.
 
 
 ### Linear Regression 
