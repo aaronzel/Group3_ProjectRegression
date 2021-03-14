@@ -104,11 +104,11 @@ In the graph above, we can see that the borrower rate increase as the back card 
 ### Logistic Regression 
 
 ```{r}
-#logisticM1 <- glm (default ~ number_of_days + principal_balance + amount_funded + borrower_rate + listing_term + listing_monthly_payment + prosper_score + listing_category_id + income_range + stated_monthly_income + income_verifiable + dti_wprosper_loan + months_employed + monthly_debt + current_delinquencies + delinquencies_last7_years + public_records_last10_years + public_records_last12_months + credit_lines_last7_years + inquiries_last6_months + now_delinquent_derog + total_trade_items + amount_delinquent + current_credit_lines + open_credit_lines + bankcard_utilization + installment_balance + real_estate_balance + revolving_balance + real_estate_payment + revolving_available_percent + total_inquiries + satisfactory_accounts + was_delinquent_derog + delinquencies_over30_days + delinquencies_over60_days + delinquencies_over90_days + is_homeowner, data = data, family = "binomial") #all valid variables 
-#summary(logisticM1)
+logisticM1 <- glm (default ~ number_of_days + principal_balance + amount_funded + borrower_rate + listing_term + listing_monthly_payment + prosper_score + listing_category_id + income_range + stated_monthly_income + income_verifiable + dti_wprosper_loan + months_employed + monthly_debt + current_delinquencies + delinquencies_last7_years + public_records_last10_years + public_records_last12_months + credit_lines_last7_years + inquiries_last6_months + now_delinquent_derog + total_trade_items + amount_delinquent + current_credit_lines + open_credit_lines + bankcard_utilization + installment_balance + real_estate_balance + revolving_balance + real_estate_payment + revolving_available_percent + total_inquiries + satisfactory_accounts + was_delinquent_derog + delinquencies_over30_days + delinquencies_over60_days + delinquencies_over90_days + is_homeowner, data = data, family = "binomial") #all valid variables 
+summary(logisticM1)
 
-logisticm2 <- glm (default ~ number_of_days + principal_balance + amount_funded + borrower_rate + listing_term + stated_monthly_income + total_inquiries + was_delinquent_derog + I(log(number_of_days)), data = data, family = "binomial")
-summary(logisticm2)
+logisticM2 <- glm (default ~ number_of_days + principal_balance + amount_funded + borrower_rate + listing_term + stated_monthly_income + total_inquiries + was_delinquent_derog + I(log(number_of_days)), data = data, family = "binomial")
+summary(logisticM2)
 ```
 
 
