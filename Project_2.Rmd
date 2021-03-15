@@ -128,9 +128,9 @@ accuracy(list(lm.model), plotit = TRUE, digits = 3)
 ```
 
 ```{r}
-predicted <- ifelse(predict(lm.model, newdata = data_test, type = "response") > 0.5, 1, 0)
+#predicted <- ifelse(predict(lm.model, newdata = data_test, type = "response") > 0.5, 1, 0)
 
-CrossTable(x = data_test_labels, predicted, prop.chisq = FALSE)
+#CrossTable(x = data_test_labels, predicted, prop.chisq = FALSE)
 ```
 
 
