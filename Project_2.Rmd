@@ -15,6 +15,8 @@ library("ggplot2")
 library("stats")
 library("dplyr")
 library("MASS")
+library("gmodels")
+library("rcompanion")
 
 
 #str(data)
@@ -112,14 +114,23 @@ data_test_labels <- data[test_set, "borrower_rate"]
 ```
 
 ```{r}
-model <- lm(borrower_rate ~ principal_balance + amount_funded + listing_term + listing_monthly_payment + listing_category_id +  current_delinquencies + public_records_last10_years + inquiries_last6_months + bankcard_utilization + revolving_balance + revolving_available_percent + total_inquiries + delinquencies_over30_days + is_homeowner + loan_status + prosper_rating, data = data_train)
+lm.model <- lm(borrower_rate ~ principal_balance + amount_funded + listing_term + listing_monthly_payment + listing_category_id +  current_delinquencies + public_records_last10_years + inquiries_last6_months + bankcard_utilization + revolving_balance + revolving_available_percent + total_inquiries + delinquencies_over30_days + is_homeowner + loan_status + prosper_rating, data = data_train)
 
 #step.model <- stepAIC(model, direction = "both", trace = FALSE)
 
-summary(model)
+summary(lm.model)
+
+plot(list(lm.model), plotit = TRUE, digits = 3)
+
+accuracy(lm.model)
 #summary(step.model)
 ```
 
+```{r}
+predicted <- ifelse(predict(lm.model, newdata = data_test, type = "response") > 0.5, 1, 0)
+
+CrossTable(x = data_test_labels, predicted, prop.chisq = FALSE)
+```
 
 
 
