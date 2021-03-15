@@ -14,6 +14,7 @@ data <- read.csv("ProjectA_Listings2013.csv")
 library("ggplot2")
 library("stats")
 library("dplyr")
+library("MASS")
 
 
 str(data)
@@ -99,7 +100,21 @@ In the graph above, we can see that the borrower rate increase as the back card 
 ### Linear Regression 
 
 ```{r}
+set.seed(123)
 
+test_set <- sample(1:nrow(data), 0.2 * nrow(data))
+
+data_train <- data[-test_set, ]
+data_test <- data[test_set, ]
+
+data_train_labels <- data[-test_set, "borrower_rate"]
+data_test_labels <- data[test_set, "borrower_rate"]
+```
+
+```{r}
+model <- lm(borrower_rate ~ number_of_days, data = data_train)
+
+summary(model)
 ```
 
 
