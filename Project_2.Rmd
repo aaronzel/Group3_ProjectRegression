@@ -10,7 +10,8 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-#hi 
+# hi 
+
 
 data <- read.csv("ProjectA_Listings2013.csv")
 library("ggplot2")
@@ -19,8 +20,8 @@ library("dplyr")
 library("MASS")
 
 
-#str(data)
-#summary(data) 
+str(data)
+summary(data) 
 
 #factorize 
 data$loan_status <- as.factor(data$loan_status)
@@ -114,14 +115,10 @@ data_test_labels <- data[test_set, "borrower_rate"]
 ```
 
 ```{r}
-model <- lm(borrower_rate ~ principal_balance + amount_funded + listing_term + listing_monthly_payment + listing_category_id +  current_delinquencies + public_records_last10_years + inquiries_last6_months + bankcard_utilization + revolving_balance + revolving_available_percent + total_inquiries + delinquencies_over30_days + is_homeowner + loan_status + prosper_rating, data = data_train)
-
-#step.model <- stepAIC(model, direction = "both", trace = FALSE)
+model <- lm(borrower_rate ~ number_of_days, data = data_train)
 
 summary(model)
-#summary(step.model)
 ```
-
 
 
 
