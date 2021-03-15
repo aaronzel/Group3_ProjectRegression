@@ -1,0 +1,143 @@
+---
+title: "Project_1"
+author: "Sanjeev's SupeRstars: Aaron Zelmanov, Muhammad Hafizudeen Mohamad Saman, Nakul Chadha, Kendall Cohen, Michael Geraci"
+date: "2/21/2021"
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+data <- read.csv("ProjectA_Listings2013.csv")
+library("ggplot2")
+library("stats")
+library("dplyr")
+library("MASS")
+
+
+str(data)
+summary(data) 
+
+#factorize 
+data$loan_status <- as.factor(data$loan_status)
+data$total_open_revolving_accounts <- as.factor(data$loan_status_description)
+data$prosper_score <- as.factor(data$prosper_score)
+data$income_range <- as.factor(data$income_range)
+data$income_range_description <- as.factor(data$income_range_description)
+data$income_verifiable <- as.factor(data$income_verifiable)
+data$employment_status_description <- as.factor(data$employment_status_description)
+data$occupation <- as.factor(data$occupation)
+data$borrower_state <- as.factor(data$borrower_state)
+data$lender_indicator <- as.factor(data$lender_indicator)
+data$is_homeowner <- as.factor(data$is_homeowner)
+
+
+```
+
+## {.tabset}
+### Introduction 
+**Context:** 
+
+**Audience:** 
+
+**Key Question:** 
+
+
+### Basic Exploration 
+
+The goal of this analysis is to identify arbitrage opportunities. We want to look if there are elements that the market does not consider a risk factor - but it actually is, or if there are elements that market considers a risk factor but actually it isn’t. This way, we can construct a way to build portfolio that always have positive return with zero net investment by taking advantage of the inefficiencies in the market.
+
+But first, lets start by looking at the data as a whole. The two most important responses that we wanted to look at are the interest rates and the loan status - whether the borrower defaults or not. Correlations between the two responses and other variables can be helpful in determining which variable is significant in determining the interest rate or whether a borrower defaults. 
+
+```{r, warning = FALSE}
+
+#remove observations with NA's
+any(is.na(data$months_employed))
+any(is.na(data$installment_balance))
+data <- data[complete.cases(data), ]
+
+data$default <- ifelse(data$loan_status == 3, 1, 0)
+
+correlationsRates <- as.data.frame(cor(data[sapply(data, function(x) is.numeric(x))])[4,])
+correlationsRates %>% ggplot(aes(x=reorder(rownames(correlationsRates), correlationsRates[,1]), y=correlationsRates[,1])) + 
+  geom_bar(stat = 'identity') + ggtitle("Correlations with Interest Rate") + labs(x="Variables", y="Correlation") + theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle = 90))
+
+
+correlationsDefault <- as.data.frame(cor(data[sapply(data, function(x) is.numeric(x))])[,35])
+correlationsDefault %>% ggplot(aes(x=reorder(rownames(correlationsDefault)[], correlationsDefault[,1]), y=correlationsDefault[,1])) + 
+  geom_bar(stat = 'identity') + ggtitle("Correlations with Default") + labs(x="Variables", y="Correlation") + theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle = 90))
+```
+
+The graphs above show the correlation between the two responses of interest against other variables in the dataset. The leftmost variables are the variables that move in the opposite direction of the variables of interest, ordered in decreasing magnitude, while the rightmost variables are the ones that move in the same direction as the variables of interest, ordered in increasing magnitude. With this graph, we get to see which variables might be good in interpreting the responses. 
+
+We have to note that the magnitude of the correlation is what matters in predicting which variables have a significant impact on the response variables. Negative correlations with high magnitude is likely to produce more predictive power than variables with almost zero correlation with the response.
+
+
+Now, lets take a further look into the variables potentially have a significant effect on the responses.
+
+```{r}
+ggplot(data=data, aes(x=amount_funded, y = borrower_rate, colour=borrower_rate)) + geom_jitter(alpha = 0.25)
+
+
+```
+The data shows that as the amount funded increases, the borrower rate decreases.
+
+```{r, warning = FALSE}
+ggplot(data=data, aes(x=as.logical(default), y = borrower_rate, colour=borrower_rate)) + geom_boxplot() + xlab("Defaulted") + ylab("Borrower Rate")
+```
+The data above shows that people who defaulted received higher borrowing rate. This is due to the fact that the lender charged the borrower for the credit risk that they took. The more likely the person is to default, the more that the borrower needs to pay upfront so that in case the borrower defaults, the extra rate that the lender charged can cover a portion of the loss from the default.
+
+
+```{r}
+baseplot <- ggplot(data = data, aes(x=bankcard_utilization, y = borrower_rate, colour=borrower_rate))
+baseplot+geom_smooth()
+```
+In the graph above, we can see that the borrower rate increase as the back card utilization increase. This is most likely due to reason that people who utilize bank card a lot is seen as financially distressed and more likely to default, therefore the credit risk is higher on these people. However, we can also see that when the bank card utilization is fairly low, the borrower rate actually decreases as the utilization increases. This might be because the bank encourages the utilization of the card by offering initiative to lower the borrowing rate to customers who utilize credit card until a certain point.
+
+
+### Linear Regression 
+
+```{r}
+set.seed(123)
+
+test_set <- sample(1:nrow(data), 0.2 * nrow(data))
+
+data_train <- data[-test_set, ]
+data_test <- data[test_set, ]
+
+data_train_labels <- data[-test_set, "borrower_rate"]
+data_test_labels <- data[test_set, "borrower_rate"]
+```
+
+```{r}
+model <- lm(borrower_rate ~ number_of_days + principal_balance + amount_funded + default + listing_term + listing_monthly_payment + prosper_score + listing_category_id + income_range + stated_monthly_income + income_verifiable + dti_wprosper_loan + months_employed + monthly_debt + current_delinquencies + delinquencies_last7_years + public_records_last10_years + public_records_last12_months + credit_lines_last7_years + inquiries_last6_months + now_delinquent_derog + total_trade_items + amount_delinquent + current_credit_lines + open_credit_lines + bankcard_utilization + installment_balance + real_estate_balance + revolving_balance + real_estate_payment + revolving_available_percent + total_inquiries + satisfactory_accounts + was_delinquent_derog + delinquencies_over30_days + delinquencies_over60_days + delinquencies_over90_days + is_homeowner, data = data_train)
+
+summary(model)
+
+step.model <- stepAIC(model, direction = "both", trace = FALSE)
+```
+
+
+
+### Logistic Regression 
+
+```{r}
+logisticM1 <- glm (default ~ number_of_days + principal_balance + amount_funded + borrower_rate + listing_term + listing_monthly_payment + prosper_score + listing_category_id + income_range + stated_monthly_income + income_verifiable + dti_wprosper_loan + months_employed + monthly_debt + current_delinquencies + delinquencies_last7_years + public_records_last10_years + public_records_last12_months + credit_lines_last7_years + inquiries_last6_months + now_delinquent_derog + total_trade_items + amount_delinquent + current_credit_lines + open_credit_lines + bankcard_utilization + installment_balance + real_estate_balance + revolving_balance + real_estate_payment + revolving_available_percent + total_inquiries + satisfactory_accounts + was_delinquent_derog + delinquencies_over30_days + delinquencies_over60_days + delinquencies_over90_days + is_homeowner, data = data, family = "binomial") #all valid variables 
+summary(logisticM1)
+
+logisticM2 <- glm (default ~ number_of_days + principal_balance + amount_funded + borrower_rate + listing_term + stated_monthly_income + total_inquiries + was_delinquent_derog + I(log(number_of_days)), data = data, family = "binomial")
+summary(logisticM2)
+```
+
+
+
+
+
+### Comparison 
+
+
+
+
+### Conclusion 
