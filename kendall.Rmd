@@ -10,16 +10,11 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-# hi 
-
-
 data <- read.csv("ProjectA_Listings2013.csv")
 library("ggplot2")
 library("stats")
 library("dplyr")
 library("MASS")
-library("gmodels")
-library("rcompanion")
 
 
 str(data)
@@ -117,23 +112,13 @@ data_test_labels <- data[test_set, "borrower_rate"]
 ```
 
 ```{r}
-lm.model <- lm(borrower_rate ~ principal_balance + amount_funded + listing_term + listing_monthly_payment + listing_category_id +  current_delinquencies + public_records_last10_years + inquiries_last6_months + bankcard_utilization + revolving_balance + revolving_available_percent + total_inquiries + delinquencies_over30_days + is_homeowner + loan_status + prosper_rating, data = data_train)
+model <- lm(borrower_rate ~ number_of_days + principal_balance + amount_funded + default + listing_term + listing_monthly_payment + prosper_score + listing_category_id + income_range + stated_monthly_income + income_verifiable + dti_wprosper_loan + months_employed + monthly_debt + current_delinquencies + delinquencies_last7_years + public_records_last10_years + public_records_last12_months + credit_lines_last7_years + inquiries_last6_months + now_delinquent_derog + total_trade_items + amount_delinquent + current_credit_lines + open_credit_lines + bankcard_utilization + installment_balance + real_estate_balance + revolving_balance + real_estate_payment + revolving_available_percent + total_inquiries + satisfactory_accounts + was_delinquent_derog + delinquencies_over30_days + delinquencies_over60_days + delinquencies_over90_days + is_homeowner, data = data_train)
 
-#step.model <- stepAIC(model, direction = "both", trace = FALSE)
+summary(model)
 
-summary(lm.model)
-
-plot(list(lm.model), plotit = TRUE, digits = 3)
-
-accuracy(lm.model)
-#summary(step.model)
+step.model <- stepAIC(model, direction = "both", trace = FALSE)
 ```
 
-```{r}
-predicted <- ifelse(predict(lm.model, newdata = data_test, type = "response") > 0.5, 1, 0)
-
-CrossTable(x = data_test_labels, predicted, prop.chisq = FALSE)
-```
 
 
 ### Logistic Regression 
