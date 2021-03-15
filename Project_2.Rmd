@@ -10,6 +10,8 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
+#hi 
+
 data <- read.csv("ProjectA_Listings2013.csv")
 library("ggplot2")
 library("stats")
