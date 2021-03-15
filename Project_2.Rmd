@@ -98,6 +98,9 @@ In the graph above, we can see that the borrower rate increase as the back card 
 
 ### Linear Regression 
 
+```{r}
+
+```
 
 
 
