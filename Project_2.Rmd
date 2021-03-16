@@ -126,6 +126,8 @@ In summary:
 The following variables have a positive relationship with borrower rate (when this predictor variable goes up, so does interest rate): listing_term, listing_monthly_payment,  listing_category_id, current_delinquencies, inquiries_last6_months, bankcard_utilization, delinquencies_over30_days, loan status 2 and 3, and prosper ratings B C D E and HR. The market considers these factors "credit risks", and thus they raise the interest rate.  
 
 The following variables have a negative relationship with borrower rate (when this predictor variable goes up, interest rate goes down): principal_balance, amount_funded, revolving_balance, revolving_available_percent, is_homeownerTRUE, loan_status4, and prosper_ratingAA. The market does not consider these factors "credit risks", rather the opposite. 
+
+
 ```{r}
 # Plot the linear regression model 
 plot(lm.model)
@@ -133,7 +135,6 @@ plot(lm.model)
 # Plot the accuracy graph
 accuracy(list(lm.model), plotit = TRUE, digits = 3)
 ```
-
 
 *Linear Regression Visualization Analysis*
 Residual vs Fitted: The first graph displays if the mean residual value for every fitted value is close to 0. It shows if residuals have non-linear patterns.  Because the red line is practically at 0, the model is sufficient. 
@@ -145,7 +146,6 @@ Scale Location: The scale-location plot shows if residuals are spread equally al
 Residuals vs Leverage: This plot helps find influential cases (outliers) if any exist. This graph shows us that in our model, many of the outliers have standard residuals below 0, which is why the line falls downward. This means there are a small number of data points that are more influential in our model than others. The spots outside the dashed line (Cooks Distance) can be influential against the regression line. The regression would be changed if we exclude those cases. 
 
 Model 1: This is the accuracy model. This accuracy model indicates that for the most part, our model is accurate. 
-
 
 ### Logistic Regression
 
