@@ -134,7 +134,7 @@ data_test_labels_2 <- data[test_set, "default"]
 logisticM1 <- glm (default ~ number_of_days + principal_balance + amount_funded + borrower_rate + listing_term + listing_monthly_payment + prosper_score + listing_category_id + income_range + stated_monthly_income + income_verifiable + dti_wprosper_loan + months_employed + monthly_debt + current_delinquencies + delinquencies_last7_years + public_records_last10_years + public_records_last12_months + credit_lines_last7_years + inquiries_last6_months + now_delinquent_derog + total_trade_items + amount_delinquent + current_credit_lines + open_credit_lines + bankcard_utilization + installment_balance + real_estate_balance + revolving_balance + real_estate_payment + revolving_available_percent + total_inquiries + satisfactory_accounts + was_delinquent_derog + delinquencies_over30_days + delinquencies_over60_days + delinquencies_over90_days + is_homeowner, data = data, family = "binomial") #all valid variables 
 summary(logisticM1)
 
-#logisticM2 <- stepAIC(logisticM1, direction = "both", trace = FALSE)
+#logisticM2 <- step(logisticM1)
 #summary(logisticM2)
 
 logisticM3 <- glm(default ~ number_of_days + principal_balance + borrower_rate + listing_term + stated_monthly_income + total_inquiries + was_delinquent_derog + principal_balance * listing_term + principal_balance * stated_monthly_income + principal_balance * total_inquiries + amount_funded * stated_monthly_income + I(number_of_days^2) + I(principal_balance^2) + I(amount_funded^2), data = data, family = "binomial")
