@@ -143,6 +143,15 @@ summary(logisticM3)
 test_pred_2 <- predict(logisticM3, newdata = data_test, type = "response")
 predicted_results <- ifelse(test_pred_2 > 0.4, 1, 0) 
 CrossTable(x = data_test_labels_2, y = predicted_results, prop.chisq=FALSE)
+
+accuracy_logit <- (6358 + 5)/6660
+accuracy_logit
+
+error_logit <- 1-accuracy_logit
+error_logit
+
+sensitivity_logit <- 5/300
+sensitivity_logit
 ```
 
 
