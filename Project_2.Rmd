@@ -108,15 +108,37 @@ data_test_labels <- data[test_set, "borrower_rate"]
 ```
 
 ```{r}
-lm.model <- lm(borrower_rate ~ principal_balance + amount_funded + listing_term + listing_monthly_payment + listing_category_id +  current_delinquencies + public_records_last10_years + inquiries_last6_months + bankcard_utilization + revolving_balance + revolving_available_percent + total_inquiries + delinquencies_over30_days + is_homeowner + loan_status + prosper_rating, data = data_train)
+lm.model <- lm(borrower_rate ~ principal_balance + amount_funded + listing_term + listing_monthly_payment + listing_category_id +  current_delinquencies + inquiries_last6_months + bankcard_utilization + revolving_balance + revolving_available_percent + delinquencies_over30_days + is_homeowner + loan_status + prosper_rating, data = data_train)
 summary(lm.model)
+```
 
+*Linear Regression Model Analysis* 
+
+We see that the model itself - the argument that the borrower rate has a significant relationship with the above variables included in the model - is in fact statistically significant (model p value < 0.05). These predictor variables explain about 94.5% of the variance in borrower rates, as as shown by the R-Squared value. This means that most of the key determinants of the borrower rate are included in the model. After our first iteration of the model, we learned that certain variables, such as delinquencies in the past year and total inquiries, were not significant and thus were removed. We can interpret the model by saying when principle balance goes up by 1, all else equal, the interest rate decreases by -4.087e-5. Additionally, when the amount funded increases by 1, the interest rate decreases by -1.125e-4. Similar analysis applies to each variable based on the coefficient estimate values. 
+
+In summary: 
+The following variables have a positive relationship with borrower rate (when this predictor variable goes up, so does interest rate): listing_term, listing_monthly_payment,  listing_category_id, current_delinquencies, inquiries_last6_months, bankcard_utilization, delinquencies_over30_days, loan status 2 and 3, and prosper ratings B C D E and HR. 
+
+The following variables have a negative relationship with borrower rate (when this predictor variable goes up, interest rate goes down): principal_balance, amount_funded, revolving_balance, revolving_available_percent, is_homeownerTRUE, loan_status4, and prosper_ratingAA
+```{r}
+# Plot the linear regression model 
 plot(lm.model)
 
 accuracy(list(lm.model), plotit = TRUE, digits = 3)
 #summary(step.model)
 ```
 
+
+*Linear Regression Visualization Analysis*
+Residual vs Fitted: The first graph displays if the mean residual value for every fitted value is close to 0. It shows if residuals have non-linear patterns.  Because the red line is practically at 0, the model is sufficient. 
+
+Normal Q-Q: This is a probability plot that shows if residuals are normally distributed. If you see between -2 and 2 (2 standard deviations above and below mean), the line is practically straight along y = x. This is favorable.
+
+Scale Location: The scale-location plot shows if residuals are spread equally along the ranges of predictors. There is a bit of a peak in the middle, indicating that there are more points in the middle and the data converges around the mean. 
+
+Residuals vs Leverage: This plot helps find influential cases (outliers) if any exist. This graph shows us that in our model, many of the outliers have standard residuals below 0, which is why the line falls downward. This means there are a small number of data points that are more influential in our model than others. The spots outside the dashed line (Cooks Distance) can be influential against the regression line. The regression would be changed if we exclude those cases. 
+
+Model 1: This is the accuracy model. This accuracy model indicates that for the most part, our model is accurate. 
 ```{r}
 #predicted <- ifelse(predict(lm.model, newdata = data_test, type = "response") > 0.5, 1, 0)
 
