@@ -175,7 +175,7 @@ error_logit <- 1-accuracy_logit
 
 
 sensitivity_logit <- 5/300
-sensitivity_logit
+
 
 specificity_logit <- 6358/6360
 
@@ -183,7 +183,7 @@ specificity_logit <- 6358/6360
 precision_logit <- 5/7
 
 
-logit_metrics.df <- data.frame("Model 3", accuracy_logit, sensitivity_logit, precision_logit)
+logit_metrics.df <- data.frame("Model 3", accuracy_logit, sensitivity_logit, specificity_logit, precision_logit)
 logit_metrics.df
 
 ```
