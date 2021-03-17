@@ -224,9 +224,19 @@ Residuals vs. Leverage:
 
 
 
-### Comparison 
+### Comparison/Arbitrage 
 
+**Variables that are significant in the linear regression but not in the logistic regression currently affect a borrower's interest rate but actually shouldn't because may not be predictive of default. Let's explore:**
 
+listing_monthly_payment, listing_category_id, current_delinquencies, inquiries_last6_months, bankcard_utilization, revolving_balance, revolving_available_percent, delinquencies_over30_days, is_homeowner, and prosper_rating are examples of such variables. listing_monthly_payment, listing_category_id, current_delinquencies, inquiries_last6_months, bankcard_utilization, delinquencies_over30_days, and non prosper_rating AA all increase interest rates despite not being predictive of actual defaults. Thus, it is likely that borrowers/loans that meet these conditions are being charged higher rates than they should. On the flip side, revolving_balance, revolving_available_percent, is_homeownerTRUE, and prosper_ratingAA all decrease interest rated despite not being predictive of actual defaults. Thus, it is likely that borrowers/loans that meet these conditions are being charged lower rates than they should. 
+
+**Variables that are significant in the logistic regression but not in the linear regression currently affect a borrower's default likelihood but are not reflected in the interest rate charged. Let's explore:**
+
+number_of_days, borrower_rate, stated_monthly_income, total_inquiries, and was_delinquent_derog are examples of such variables. They increase odds of default but aren't causing an increase in interest rates. Although some of these variables may be reflected through other similar variables in the linear model, it would be more accurate to use the variables that are most predictive of default. Thus, it is likely that borrowers/loans that meet these conditions are being charged lower rates than they should.      
+
+**Variables that are significant in both the linear regression and logistic regression but show opposite outcomes affect a borrower's interest rate in the opposite direction that they should. Let's explore:**
+
+principal_balance and amount_funded are examples of such variables. They decrease interest rates despite actually increasing odds of default. Thus, it is likely that borrowers/loans that meet these conditions are being charged lower rates than they should.      
 
 
 ### Conclusion 
