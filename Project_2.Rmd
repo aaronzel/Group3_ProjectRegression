@@ -165,27 +165,35 @@ logisticM3 <- glm(default ~ number_of_days + principal_balance + borrower_rate +
 summary(logisticM3)
 
 test_pred_2 <- predict(logisticM3, newdata = data_test, type = "response")
-predicted_results <- ifelse(test_pred_2 > 0.4, 1, 0) 
+predicted_results <- ifelse(test_pred_2 > 0.1, 1, 0) 
 CrossTable(x = data_test_labels_2, y = predicted_results, prop.chisq=FALSE)
 
 plot(logisticM3)
 
-accuracy_logit <- (6359 + 4)/6660
+
+accuracy_logit1 <- (6359 + 4)/6660
+accuracy_logit2 <- (6038+57)/6660
+
+accuracy_met <- c(accuracy_logit1,accuracy_logit2)
+
+error_logit1 <- 1-accuracy_logit1
+error_logit2 <- 1-accuracy_logit2
+error_met <- c(error_logit1, error_logit2)
+
+sensitivity_logit1 <- 4/300
+sensitivity_logit2 <- 57/300
+sensitivity_met <- c(sensitivity_logit1, sensitivity_logit2)
 
 
-error_logit <- 1-accuracy_logit
+specificity_logit1 <- 6359/6360
+specificity_logit2 <- 6038/6360
+specificity_met <- c(specificity_logit1,specificity_logit2)
 
+precision_logit1 <- 4/5
+precision_logit2 <- 57/379
+precision_met <- c(precision_logit1,precision_logit2)
 
-sensitivity_logit <- 4/300
-
-
-specificity_logit <- 6359/6360
-
-
-precision_logit <- 4/5
-
-
-logit_metrics.df <- data.frame("Model 3", accuracy_logit, sensitivity_logit, specificity_logit, precision_logit)
+logit_metrics.df <- data.frame(c("Model 3", "Model 3 low"), accuracy_met, error_met, sensitivity_met, specificity_met, precision_met)
 logit_metrics.df
 
 ```
