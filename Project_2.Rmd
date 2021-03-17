@@ -132,7 +132,7 @@ accuracy(list(lm.model), plotit = TRUE, digits = 3)
 <br />
 *Linear Regression Visualization Analysis*
 
-Residual vs Fitted: The first graph displays if the mean residual value for every fitted value is close to 0. It shows if residuals have non-linear patterns.  Because the red line is practically at 0, the model is sufficient. 
+Residual vs Fitted: The first graph displays if the mean residual value for every fitted value is close to 0. It shows if residuals have non-linear patterns. Because the red line is practically at 0, the model is sufficient. 
 
 Normal Q-Q: This is a probability plot that shows if residuals are normally distributed. If you see between -2 and 2 (2 standard deviations above and below mean), the line is practically straight along y = x. This is favorable.
 
