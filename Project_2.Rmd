@@ -96,10 +96,7 @@ In the graph above, we can see that the borrower rate increases as the bank card
 
 ### Linear Regression 
 
-*Linear Regression* 
-See below for a linear model determining how interest rates for loans are determined.
-
-We will create and run the model, analyze credit risks, then proceed to analyze the model. 
+See below for a linear model determining how interest rates for loans are determined. We will create and run the model, analyze credit risks, and then proceed to analyze the model. 
 
 ```{r}
 set.seed(123)
@@ -111,13 +108,11 @@ data_test <- data[test_set, ]
 
 data_train_labels <- data[-test_set, "borrower_rate"]
 data_test_labels <- data[test_set, "borrower_rate"]
-```
 
-```{r}
 lm.model <- lm(borrower_rate ~ principal_balance + amount_funded + listing_term + listing_monthly_payment + listing_category_id +  current_delinquencies + inquiries_last6_months + bankcard_utilization + revolving_balance + revolving_available_percent + delinquencies_over30_days + is_homeowner + loan_status + prosper_rating, data = data_train)
 summary(lm.model)
 ```
-
+<br />
 *Linear Regression Model Analysis* 
 
 We see that the model itself - the argument that the borrower rate has a significant relationship with the above variables included in the model - is in fact statistically significant (model p value < 0.05). These predictor variables explain about 94.5% of the variance in borrower rates, as as shown by the R-Squared value. This means that most of the key determinants of the borrower rate are included in the model. After our first iteration of the model, we learned that certain variables, such as delinquencies in the past year and total inquiries, were not significant and thus were removed. We can interpret the model by saying when principle balance goes up by 1, all else equal, the interest rate decreases by -4.087e-5. Additionally, when the amount funded increases by 1, the interest rate decreases by -1.125e-4. Similar analysis applies to each variable based on the coefficient estimate values. 
@@ -127,7 +122,6 @@ The following variables have a positive relationship with borrower rate (when th
 
 The following variables have a negative relationship with borrower rate (when this predictor variable goes up, interest rate goes down): principal_balance, amount_funded, revolving_balance, revolving_available_percent, is_homeownerTRUE, loan_status4, and prosper_ratingAA. The market does not consider these factors "credit risks", rather the opposite. 
 
-
 ```{r}
 # Plot the linear regression model 
 plot(lm.model)
@@ -135,8 +129,9 @@ plot(lm.model)
 # Plot the accuracy graph
 accuracy(list(lm.model), plotit = TRUE, digits = 3)
 ```
-
+<br />
 *Linear Regression Visualization Analysis*
+
 Residual vs Fitted: The first graph displays if the mean residual value for every fitted value is close to 0. It shows if residuals have non-linear patterns.  Because the red line is practically at 0, the model is sufficient. 
 
 Normal Q-Q: This is a probability plot that shows if residuals are normally distributed. If you see between -2 and 2 (2 standard deviations above and below mean), the line is practically straight along y = x. This is favorable.
@@ -149,12 +144,12 @@ Model 1: This is the accuracy model. This accuracy model indicates that for the 
 
 ### Logistic Regression
 
-```{r}
+See below for a logistic model determining what causes loan defaults. We will create and run the model, analyze default risks, and then proceed to analyze the model.
+
+```{r, warning=FALSE}
 data_train_labels_2 <- data[-test_set, "default"]
 data_test_labels_2 <- data[test_set, "default"]
-```
 
-```{r}
 #logisticM1 <- glm (default ~ number_of_days + principal_balance + amount_funded + borrower_rate + listing_term + listing_monthly_payment + prosper_score + listing_category_id + income_range + stated_monthly_income + income_verifiable + dti_wprosper_loan + months_employed + monthly_debt + current_delinquencies + delinquencies_last7_years + public_records_last10_years + public_records_last12_months + credit_lines_last7_years + inquiries_last6_months + now_delinquent_derog + total_trade_items + amount_delinquent + current_credit_lines + open_credit_lines + bankcard_utilization + installment_balance + real_estate_balance + revolving_balance + real_estate_payment + revolving_available_percent + total_inquiries + satisfactory_accounts + was_delinquent_derog + delinquencies_over30_days + delinquencies_over60_days + delinquencies_over90_days + is_homeowner, data = data_train, family = "binomial") #all valid variables 
 #summary(logisticM1)
 
@@ -168,46 +163,43 @@ test_pred_2 <- predict(logisticM3, newdata = data_test, type = "response")
 predicted_results <- ifelse(test_pred_2 > 0.15, 1, 0) 
 CrossTable(x = data_test_labels_2, y = predicted_results, prop.chisq=FALSE)
 
-plot(logisticM3)
-
-
 accuracy_logit1 <- (6359 + 4)/6660
 accuracy_logit2 <- (6314+17)/6660
-
-accuracy_met <- c(accuracy_logit1,accuracy_logit2)
+accuracy <- round(c(accuracy_logit1,accuracy_logit2),3)
 
 error_logit1 <- 1-accuracy_logit1
 error_logit2 <- 1-accuracy_logit2
-error_met <- c(error_logit1, error_logit2)
+error <- round(c(error_logit1, error_logit2),3)
 
 sensitivity_logit1 <- 4/300
 sensitivity_logit2 <- 17/300
-sensitivity_met <- c(sensitivity_logit1, sensitivity_logit2)
-
+sensitivity <- round(c(sensitivity_logit1, sensitivity_logit2),3)
 
 specificity_logit1 <- 6359/6360
 specificity_logit2 <- 6314/6360
-specificity_met <- c(specificity_logit1,specificity_logit2)
+specificity <- round(c(specificity_logit1,specificity_logit2),3)
 
 precision_logit1 <- 4/5
 precision_logit2 <- 17/63
-precision_met <- c(precision_logit1,precision_logit2)
+precision <- round(c(precision_logit1,precision_logit2),3)
 
-logit_metrics.df <- data.frame(c("Model 3", "Model 3 low"), accuracy_met, error_met, sensitivity_met, specificity_met, precision_met)
+model <- c("Old Model", "New Model")
+logit_metrics.df <- data.frame(model, accuracy, error, sensitivity, specificity, precision)
 logit_metrics.df
-
 ```
-**Logistic Regression Model Analysis**
+<br />
+*Logistic Regression Model Analysis*
 
-*Evaluation of Coefficients*
+Evaluation of Coefficients: From our logistic regression model, we essentially see that the magnitude of the loan is the greatest risk of default. This means that the the longer the loan is, the greater the principal balance, the borrower rate, and the amount funded all increase the likelihood of a default. Total inquiries interestingly also positively affected the likelihood of a default. Perhaps if someone is having difficulty paying their interest, they are more likely to ask for help. Stated monthly income had a negative effect on the likelihood of default. 
 
-From our logistic regression model, we essentially see that the magnitude of the loan is the greatest risk of default. This means that the the longer the loan is, the greater the principal balance, the borrower rate, and the amount funded all increase the likelihood of a default. Total inquiries interestingly also positively affected the likelihood of a default. Perhaps if someone is having difficulty paying their interest, they are more likely to ask for help. Stated monthly income had a negative effect on the likelihood of default. 
+Evaluation of Confusion Matrix: In our initial model, our accuracy was very high at rate of ~96%. However a big problem with this model was the sensitivity metric which had a rate of ~1%. What this means is that out of all data points in our test set that defaulted, we only correctly predicted ~1%. A reason for this may be that our data is filled with points that overwhelmingly did not default ~96%. However, we believed that for this model to be of any value to us we should increase our sensitivity rate even at the expense of accuracy. To do this we reduced the threshold at which our prediction would output default to >= 0.15. This improved the sensitivity of our model to 5.6% while only reducing our accuracy to 95%. We believe that this adjustment creates value for our model, although it does still struggle to identify defaults. We think this is because the dataset has minimal data about defaults and the logistic regression needs more default data to predict future cases accurately. 
+```{r}
+plot(logisticM3)
+```
 
-*Evaluation of Confusion Matrix*
+<br />
 
-In our initial model, our accuracy was very high at rate of ~96%. However a big problem with this model was the sensitivity metric which had a rate of ~1%. What this means is that out of all data points in our test set that defaulted, we only correctly predicted ~1%. A reason for this may be that our data is filled with points that overwhelmingly did not default ~96%. However, we believed that for this model to be of any value to us we should increase our sensitivity rate even at the expense of accuracy. To do this we reduced the threshold at which our prediction would output default to >= 0.15. This improved the sensitivity of our model to 5.6% while only reducing our accuracy to 95%. We believe that this adjustment creates value for our model, although it does still struggle to identify defaults. 
-
-**Logistic Regression Visualization Analysis**
+*Logistic Regression Visualization Analysis*
 
 Residuals vs. Fitted:
 
