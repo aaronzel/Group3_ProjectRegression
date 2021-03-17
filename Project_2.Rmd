@@ -155,8 +155,8 @@ data_test_labels_2 <- data[test_set, "default"]
 ```
 
 ```{r}
-logisticM1 <- glm (default ~ number_of_days + principal_balance + amount_funded + borrower_rate + listing_term + listing_monthly_payment + prosper_score + listing_category_id + income_range + stated_monthly_income + income_verifiable + dti_wprosper_loan + months_employed + monthly_debt + current_delinquencies + delinquencies_last7_years + public_records_last10_years + public_records_last12_months + credit_lines_last7_years + inquiries_last6_months + now_delinquent_derog + total_trade_items + amount_delinquent + current_credit_lines + open_credit_lines + bankcard_utilization + installment_balance + real_estate_balance + revolving_balance + real_estate_payment + revolving_available_percent + total_inquiries + satisfactory_accounts + was_delinquent_derog + delinquencies_over30_days + delinquencies_over60_days + delinquencies_over90_days + is_homeowner, data = data_train, family = "binomial") #all valid variables 
-summary(logisticM1)
+#logisticM1 <- glm (default ~ number_of_days + principal_balance + amount_funded + borrower_rate + listing_term + listing_monthly_payment + prosper_score + listing_category_id + income_range + stated_monthly_income + income_verifiable + dti_wprosper_loan + months_employed + monthly_debt + current_delinquencies + delinquencies_last7_years + public_records_last10_years + public_records_last12_months + credit_lines_last7_years + inquiries_last6_months + now_delinquent_derog + total_trade_items + amount_delinquent + current_credit_lines + open_credit_lines + bankcard_utilization + installment_balance + real_estate_balance + revolving_balance + real_estate_payment + revolving_available_percent + total_inquiries + satisfactory_accounts + was_delinquent_derog + delinquencies_over30_days + delinquencies_over60_days + delinquencies_over90_days + is_homeowner, data = data_train, family = "binomial") #all valid variables 
+#summary(logisticM1)
 
 #logisticM2 <- step(logisticM1)
 #summary(logisticM2)
@@ -165,14 +165,14 @@ logisticM3 <- glm(default ~ number_of_days + principal_balance + borrower_rate +
 summary(logisticM3)
 
 test_pred_2 <- predict(logisticM3, newdata = data_test, type = "response")
-predicted_results <- ifelse(test_pred_2 > 0.1, 1, 0) 
+predicted_results <- ifelse(test_pred_2 > 0.15, 1, 0) 
 CrossTable(x = data_test_labels_2, y = predicted_results, prop.chisq=FALSE)
 
 plot(logisticM3)
 
 
 accuracy_logit1 <- (6359 + 4)/6660
-accuracy_logit2 <- (6038+57)/6660
+accuracy_logit2 <- (6314+17)/6660
 
 accuracy_met <- c(accuracy_logit1,accuracy_logit2)
 
@@ -181,23 +181,33 @@ error_logit2 <- 1-accuracy_logit2
 error_met <- c(error_logit1, error_logit2)
 
 sensitivity_logit1 <- 4/300
-sensitivity_logit2 <- 57/300
+sensitivity_logit2 <- 17/300
 sensitivity_met <- c(sensitivity_logit1, sensitivity_logit2)
 
 
 specificity_logit1 <- 6359/6360
-specificity_logit2 <- 6038/6360
+specificity_logit2 <- 6314/6360
 specificity_met <- c(specificity_logit1,specificity_logit2)
 
 precision_logit1 <- 4/5
-precision_logit2 <- 57/379
+precision_logit2 <- 17/63
 precision_met <- c(precision_logit1,precision_logit2)
 
 logit_metrics.df <- data.frame(c("Model 3", "Model 3 low"), accuracy_met, error_met, sensitivity_met, specificity_met, precision_met)
 logit_metrics.df
 
 ```
+**Logistic Regression Model Analysis**
 
+*Evaluation of Coefficients*
+
+From our logistic regression model, we essentially see that the magnitude of the loan is the greatest risk of default. This means that the the longer the loan is, the greater the principal balance, the borrower rate, and the amount funded all increase the likelihood of a default. Total inquiries interestingly also positively affected the likelihood of a default. Perhaps if someone is having difficulty paying their interest, they are more likely to ask for help. Stated monthly income had a negative effect on the likelihood of default. 
+
+*Evaluation of Confusion Matrix*
+
+In our initial model, our accuracy was very high at rate of ~96%. However a big problem with this model was the sensitivity metric which had a rate of ~1%. What this means is that out of all data points in our test set that defaulted, we only correctly predicted ~1%. A reason for this may be that our data is filled with points that overwhelmingly did not default ~96%. However, we believed that for this model to be of any value to us we should increase our sensitivity rate even at the expense of accuracy. To do this we reduced the threshold at which our prediction would output default to >= 0.15. This improved the sensitivity of our model to 5.6% while only reducing our accuracy to 95%. We believe that this adjustment creates value for our model, although it does still struggle to identify defaults. 
+
+**Logistic Regression Visualization Analysis**
 
 
 
