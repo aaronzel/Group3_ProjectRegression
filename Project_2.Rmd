@@ -209,6 +209,18 @@ In our initial model, our accuracy was very high at rate of ~96%. However a big 
 
 **Logistic Regression Visualization Analysis**
 
+Residuals vs. Fitted:
+
+Normal Q-Q:
+
+Scale-Location:
+
+Residuals vs. Leverage:
+
+
+
+
+
 
 
 
