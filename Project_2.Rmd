@@ -193,27 +193,6 @@ logit_metrics.df
 Evaluation of Coefficients: From our logistic regression model, we essentially see that the magnitude of the loan is the greatest risk of default. This means that the the longer the loan is, the greater the principal balance, the borrower rate, and the amount funded all increase the likelihood of a default. Total inquiries interestingly also positively affected the likelihood of a default. Perhaps if someone is having difficulty paying their interest, they are more likely to ask for help. Stated monthly income had a negative effect on the likelihood of default. 
 
 Evaluation of Confusion Matrix: In our initial model, our accuracy was very high at rate of ~96%. However a big problem with this model was the sensitivity metric which had a rate of ~1%. What this means is that out of all data points in our test set that defaulted, we only correctly predicted ~1%. A reason for this may be that our data is filled with points that overwhelmingly did not default ~96%. However, we believed that for this model to be of any value to us we should increase our sensitivity rate even at the expense of accuracy. To do this we reduced the threshold at which our prediction would output default to >= 0.15. This improved the sensitivity of our model to 5.6% while only reducing our accuracy to 95%. We believe that this adjustment creates value for our model, although it does still struggle to identify defaults. We think this is because the dataset has minimal data about defaults and the logistic regression needs more default data to predict future cases accurately. 
-```{r}
-plot(logisticM3)
-```
-
-<br />
-
-*Logistic Regression Visualization Analysis*
-
-Residuals vs. Fitted:
-
-Normal Q-Q:
-
-Scale-Location:
-
-Residuals vs. Leverage:
-
-
-
-
-
-
 
 
 ### Comparison/Arbitrage 
