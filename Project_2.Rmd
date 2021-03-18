@@ -207,7 +207,35 @@ number_of_days, borrower_rate, stated_monthly_income, total_inquiries, and was_d
 
 **Variables that are significant in both the linear regression and logistic regression but show opposite outcomes affect a borrower's interest rate in the opposite direction that they should. Let's explore:**
 
-principal_balance and amount_funded are examples of such variables. They decrease interest rates despite actually increasing odds of default. Thus, it is likely that borrowers/loans that meet these conditions are being charged lower rates than they should.      
+principal_balance and amount_funded are examples of such variables. They decrease interest rates despite actually increasing odds of default. Thus, it is likely that borrowers/loans that meet these conditions are being charged lower rates than they should.    
+
+**Opportunities for Arbitrage**
+
+Viewing our outputs, our goal would be to pursue opportunities that increase interest rates without increasing the probability of default while not pursuing opportunities that decrease interest rates without decreasing the probability of default. This means that we would be able to capture a premium over the mean borrower rate of 18.33% without increased risk according to our logistic model. 
+
+*Groups we would target*
+
+Those with current delinquencies
+
+Those with higher bankcard utilization
+
+Those with a prosper rating below AA 
+
+Those with a higher listing category id
+
+*Groups we would avoid*
+
+Homeowners
+
+Those asking for relatively large amounts of capital
+
+Those with several inquiries
+
+Those with AA prosper rating
+
+Those with a greater principal balance
+
+
 
 
 ### Conclusion 
