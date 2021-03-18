@@ -281,14 +281,14 @@ data$default_numeric <- as.numeric(data$default)
 The graphs above indicate that there exists a discrepancy between the average interest rate for those who are home owners and those who are not. Home owners are charged a lower interest rate; however, their default rate is not drastically more favorable. This presents an arbitrage opportunity, as previously explained. 
 
 
-Table Showing Average Interest Rate by Homeowner Status
+Table Showing Average Interest Rate by Homeowner Status:
 ```{r}
 mean_rate <- data %>% group_by(is_homeowner) %>% summarize(mean_rate = mean(borrower_rate))
 mean_rate
 
 ```
 
-Table Showing Average Default Rate by Homeowner Status 
+Table Showing Average Default Rate by Homeowner Status: 
 ```{r}
 # Understand numerical impact on default 
 round(prop.table(table(data$is_homeowner, data$default),1),3) #1: each row adds up to 1. 
