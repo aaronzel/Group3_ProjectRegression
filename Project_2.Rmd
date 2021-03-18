@@ -1,4 +1,5 @@
 ---
+
 title: "Project_2"
 author: "Sanjeev's SupeRstars: Aaron Zelmanov, Muhammad Hafizudeen Mohamad Saman, Nakul Chadha, Kendall Cohen, Michael Geraci"
 date: "2/21/2021"
@@ -197,15 +198,17 @@ Evaluation of Confusion Matrix: In our initial model, our accuracy was very high
 
 ### Comparison/Arbitrage 
 
-**Variables that are significant in the linear regression but not in the logistic regression currently affect a borrower's interest rate but actually shouldn't because may not be predictive of default. Let's explore:**
+**Category 1: Variables that are significant in the linear regression but not in the logistic regression currently affect a borrower's interest rate but actually shouldn't because may not be predictive of default. Let's explore:**
 
-listing_monthly_payment, listing_category_id, current_delinquencies, inquiries_last6_months, bankcard_utilization, revolving_balance, revolving_available_percent, delinquencies_over30_days, is_homeowner, and prosper_rating are examples of such variables. listing_monthly_payment, listing_category_id, current_delinquencies, inquiries_last6_months, bankcard_utilization, delinquencies_over30_days, and non prosper_rating AA all increase interest rates despite not being predictive of actual defaults. Thus, it is likely that borrowers/loans that meet these conditions are being charged higher rates than they should. On the flip side, revolving_balance, revolving_available_percent, is_homeownerTRUE, and prosper_ratingAA all decrease interest rated despite not being predictive of actual defaults. Thus, it is likely that borrowers/loans that meet these conditions are being charged lower rates than they should. 
+listing_monthly_payment, listing_category_id, current_delinquencies, inquiries_last6_months, bankcard_utilization, revolving_balance, revolving_available_percent, delinquencies_over30_days, is_homeowner, and prosper_rating are examples of such variables. listing_monthly_payment, listing_category_id, current_delinquencies, inquiries_last6_months, bankcard_utilization, delinquencies_over30_days, and non prosper_rating AA all increase interest rates despite not being predictive of actual defaults. Thus, it is likely that borrowers/loans that meet these conditions are being charged higher rates than they should. 
 
-**Variables that are significant in the logistic regression but not in the linear regression currently affect a borrower's default likelihood but are not reflected in the interest rate charged. Let's explore:**
+On the flip side, revolving_balance, revolving_available_percent, is_homeownerTRUE, and prosper_ratingAA all decrease interest rate despite not being predictive of actual defaults. Thus, it is likely that borrowers/loans that meet these conditions are being charged lower rates than they should. 
+
+**Category 2: Variables that are significant in the logistic regression but not in the linear regression currently affect a borrower's default likelihood but are not reflected in the interest rate charged. Let's explore:**
 
 number_of_days, borrower_rate, stated_monthly_income, total_inquiries, and was_delinquent_derog are examples of such variables. They increase odds of default but aren't causing an increase in interest rates. Although some of these variables may be reflected through other similar variables in the linear model, it would be more accurate to use the variables that are most predictive of default. Thus, it is likely that borrowers/loans that meet these conditions are being charged lower rates than they should.      
 
-**Variables that are significant in both the linear regression and logistic regression but show opposite outcomes affect a borrower's interest rate in the opposite direction that they should. Let's explore:**
+**Category 3: Variables that are significant in both the linear regression and logistic regression but show opposite outcomes affect a borrower's interest rate in the opposite direction that they should. Let's explore:**
 
 principal_balance and amount_funded are examples of such variables. They decrease interest rates despite actually increasing odds of default. Thus, it is likely that borrowers/loans that meet these conditions are being charged lower rates than they should.    
 
@@ -237,29 +240,62 @@ Those with a greater principal balance
 
 ### Arbitrage Analysis
 
-Arbitrage Opportunity Category 1: 
+**Arbitrage Analysis**
+
+We segmented the opportunities for arbitrage into four different categories. 
+
+Category 1: Variables that impact interest rate but do not significantly impact default rate
+
+Category 2: Variables that do not significantly impact interest rate but do impact default rate
+
+Category 3: Variables that lower interest rate but raise default rate
+
+Category 4: Variables that raise interest rate but lower default rate
+<br />
+
+**Arbitrage Opportunity Category 1:**
+This category includes variables that impact interest rate despite not being predictive of actual defaults. Thus, borrowers are being charged rates that are either too low or too high given their risk of default. 
+
+To illustrate this, we chose to dive into the variable is_homeowner. 
+
 ```{r}
 library(ggplot2)
 
+# Understand homeowner variable 
+str(data$is_homeowner)
+summary(data$is_homeowner)
+round(prop.table(table(data$is_homeowner)),3)
+```
+<br />
+The above information shows us that is_homeowner has two levels, either TRUE, meaning the person is a homeowner, and FALSE, the person is not a homeowner. 54% of borrowers included in this data set are homeowners. Next, we will analyze how home ownership impacts borrower rate and default rate. 
+```{r}
 # Graph of Home Ownership and Interest rate 
 data %>% group_by(is_homeowner) %>% summarize(mean_rate = mean(borrower_rate))%>%  ggplot(aes(is_homeowner,mean_rate, fill = is_homeowner)) + geom_col() + xlab("Is Homeowner") + ylab("Average Borrower Rate") + ggtitle("Average Borrower Rate - Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5))
 
 # Graph of Home Ownership and Default
-default_numeric <- as.numeric(data$default)
- data %>% group_by(is_homeowner) %>% summarize(mean_default = mean(default_numeric))%>%  ggplot(aes(is_homeowner,mean_default, fill = is_homeowner)) + geom_point()  + xlab("Is Homeowner") + ylab("Average Default Rate") + ggtitle("Average Default Rate - Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5))
+data$default_numeric <- as.numeric(data$default)
+ data %>% group_by(is_homeowner) %>% summarize(mean_default = mean(default))%>%  ggplot(aes(is_homeowner,mean_default, fill = is_homeowner)) + geom_point()  + xlab("Is Homeowner") + ylab("Average Default Rate") + ggtitle("Average Default Rate - Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5))
+ 
+```
+<br />
+The graphs above indicate that there exists a discrepancy between the average interest rate for those who are home owners and those who are not. Home owners are charged a lower interest rate; however, their default rate is not drastically more favorable. This presents an arbitrage opportunity, as previously explained. 
 
-#  
- 
- 
- 
-# mean_rate_owner <- data %>% group_by(is_homeowner) %>% summarize(mean_rate = mean(borrower_rate))
- 
-# mean_default <- data %>% group_by(is_homeowner) %>% summarize(mean_default = mean(default_numeric))
- 
- 
-# clean %>% group_by(gender) %>% summarize(meantripdur = median(tripduration/60))%>%  ggplot(aes(gender,meantripdur, fill = gender)) + geom_col() + xlab("Gender") + ylab("Average Trip Duration") + ggtitle("Trip Durations of Different Genders")
+
+Table Showing Average Interest Rate by Homeowner Status
+```{r}
+mean_rate <- data %>% group_by(is_homeowner) %>% summarize(mean_rate = mean(borrower_rate))
+mean_rate
+
 ```
 
+Table Showing Average Default Rate by Homeowner Status 
+```{r}
+# Understand numerical impact on default 
+round(prop.table(table(data$is_homeowner, data$default),1),3) #1: each row adds up to 1. 
+```
+
+<br />
+These tables support the conclusions evidenced by the above graphs. We see that homeowners pay 17.3% interest on average, while non-home owners pay 19.5% on average. This 2.2% difference is not justified by the 1% difference in default rate (Homeowners default 5.2% of the time while non-home owners default 0.42% of the time). 
 
 
-### Conclusion 
+### Conclusion
