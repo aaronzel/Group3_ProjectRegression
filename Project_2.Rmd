@@ -283,13 +283,14 @@ number_of_days_interest
 
 As we can see from our density plot, there is no clear pattern between number of days and interest rates besides a slight lean towards shorter terms which was not significant enough to be picked up by our linear model
 
+``` {r}
 
+# Graph of Number of Days and Default
+number_of_days_default <- ggplot(data = data, aes(number_of_days, default)) + geom_point(a = 0.5) + geom_smooth()+ scale_fill_continuous(type = "viridis") + xlab("Number of Days") + ylab("Default Rate") + ggtitle("Default Rate vs. Number of Days") 
+number_of_days_default
 
-# Graph of Home Ownership and Default
-data$default_numeric <- as.numeric(data$default)
- data %>% group_by(is_homeowner) %>% summarize(mean_default = mean(default))%>%  ggplot(aes(is_homeowner,mean_default, fill = is_homeowner)) + geom_col()  + xlab("Homeowner Status") + scale_y_continuous(limits = c(0,0.2)) + ylab("Average Default Rate") + ggtitle("Average Default Rate by Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5))
+```
 
-
-
+As we can see from our line of fit, the default rate has a hike at around 450 days. Even though it decreases at around 700 days, there is an observable pattern in this data.
 
 ### Conclusion
