@@ -1,5 +1,4 @@
 ---
-
 title: "Project_2"
 author: "Sanjeev's SupeRstars: Aaron Zelmanov, Muhammad Hafizudeen Mohamad Saman, Nakul Chadha, Kendall Cohen, Michael Geraci"
 date: "2/21/2021"
@@ -51,7 +50,7 @@ data <- data[complete.cases(data), ]
 **Key Question:** Are there elements that the market does not consider a risk factor - but it actually is? Looking in the opposite direction - are there elements that market considers a risk factor but actually it isn’t?
 
 
-### Basic Exploration 
+### Exploration 
 
 The goal of this analysis is to identify arbitrage opportunities. We want to look if there are elements that the market does not consider a risk factor - but they actually are, or if there are elements that market considers a risk factor but actually they aren’t. This way, we can construct a way to build portfolios that have positive returns with zero net investment by taking advantage of the inefficiencies in the market.
 
@@ -88,7 +87,7 @@ ggplot(data=data, aes(x=as.logical(default), y = borrower_rate, colour=borrower_
 
 The data above shows that people who defaulted received higher borrowing rate. This is due to the fact that the lender charged the borrower for the credit risk that they took. The more likely the person is to default, the more that the borrower needs to pay so that in case the borrower defaults, the extra rate that the lender charged can cover a portion of the loss from the default.
 
-```{r}
+```{r, message = FALSE, warning = FALSE, results = "hide"}
 baseplot <- ggplot(data = data, aes(x=bankcard_utilization, y = borrower_rate, colour=borrower_rate)) + xlab("Bankcard Utilization") + ylab ("Borrower Rate") + ggtitle("Borrower Rate vs Bankcard Utilization") + theme(plot.title = element_text(hjust = 0.5))
 baseplot+geom_smooth()
 ```
@@ -196,7 +195,7 @@ Evaluation of Coefficients: From our logistic regression model, we essentially s
 Evaluation of Confusion Matrix: In our initial model, our accuracy was very high at rate of ~96%. However a big problem with this model was the sensitivity metric which had a rate of ~1%. What this means is that out of all data points in our test set that defaulted, we only correctly predicted ~1%. A reason for this may be that our data is filled with points that overwhelmingly did not default ~96%. However, we believed that for this model to be of any value to us we should increase our sensitivity rate even at the expense of accuracy. To do this we reduced the threshold at which our prediction would output default to >= 0.15. This improved the sensitivity of our model to 5.6% while only reducing our accuracy to 95%. We believe that this adjustment creates value for our model, although it does still struggle to identify defaults. We think this is because the dataset has minimal data about defaults and the logistic regression needs more default data to predict future cases accurately. 
 
 
-### Comparison/Arbitrage 
+### Arbitrage
 
 **Category 1: Variables that are significant in the linear regression but not in the logistic regression currently affect a borrower's interest rate but actually shouldn't because may not be predictive of default. Let's explore:**
 
@@ -216,86 +215,62 @@ principal_balance and amount_funded are examples of such variables. They decreas
 
 Viewing our outputs, our goal would be to pursue opportunities that increase interest rates without increasing the probability of default while not pursuing opportunities that decrease interest rates without decreasing the probability of default. This means that we would be able to capture a premium over the mean borrower rate of 18.33% without increased risk according to our logistic model. 
 
-*Groups we would target*
-
-Those with current delinquencies
-
-Those with higher bankcard utilization
-
-Those with a prosper rating below AA 
-
-Those with a higher listing category id
-
-*Groups we would avoid*
-
-Homeowners
-
-Those asking for relatively large amounts of capital
-
-Those with several inquiries
-
-Those with AA prosper rating
-
-Those with a greater principal balance
-
 ### Arbitrage Analysis
 
-**Arbitrage Analysis**
-
-We segmented the opportunities for arbitrage into four different categories. 
+We segmented the opportunities for arbitrage into four different categories: 
 
 Category 1: Variables that impact interest rate but do not significantly impact default rate
 
 Category 2: Variables that do not significantly impact interest rate but do impact default rate
 
-Category 3: Variables that lower interest rate but raise default rate
-
-Category 4: Variables that raise interest rate but lower default rate
+Category 3: Variables that affect interest rate and default rate in opposite directions 
 <br />
-
+<br />
 **Arbitrage Opportunity Category 1:**
 This category includes variables that impact interest rate despite not being predictive of actual defaults. Thus, borrowers are being charged rates that are either too low or too high given their risk of default. 
 
 To illustrate this, we chose to dive into the variable is_homeowner. 
-
+<br />
+<br />
+**Number of Homeowners** 
 ```{r}
-library(ggplot2)
-
-# Understand homeowner variable 
-str(data$is_homeowner)
 summary(data$is_homeowner)
-round(prop.table(table(data$is_homeowner)),3)
 ```
 <br />
-The above information shows us that is_homeowner has two levels, either TRUE, meaning the person is a homeowner, and FALSE, the person is not a homeowner. 54% of borrowers included in this data set are homeowners. Next, we will analyze how home ownership impacts borrower rate and default rate. 
+<br />
+**Proportion of Homeowners**
 ```{r}
+round(prop.table(table(data$is_homeowner)),3)
+```
+The above information shows us that is_homeowner has two levels, either TRUE, meaning the person is a homeowner, and FALSE, the person is not a homeowner. 54% of borrowers included in this data set are homeowners. Next, we will analyze how home ownership impacts borrower rate and default rate. 
+```{r, warning=FALSE}
+options(dplyr.summarise.inform = FALSE)
 # Graph of Home Ownership and Interest rate 
-data %>% group_by(is_homeowner) %>% summarize(mean_rate = mean(borrower_rate))%>%  ggplot(aes(is_homeowner,mean_rate, fill = is_homeowner)) + geom_col() + xlab("Is Homeowner") + ylab("Average Borrower Rate") + ggtitle("Average Borrower Rate - Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5))
+data %>% group_by(is_homeowner) %>% summarize(mean_rate = mean(borrower_rate))%>%  ggplot(aes(is_homeowner,mean_rate, fill = is_homeowner)) + geom_col() + xlab("Homeowner Status") + ylab("Average Interest Rate") + ggtitle("Average Interest Rate by Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5))
 
 # Graph of Home Ownership and Default
 data$default_numeric <- as.numeric(data$default)
- data %>% group_by(is_homeowner) %>% summarize(mean_default = mean(default))%>%  ggplot(aes(is_homeowner,mean_default, fill = is_homeowner)) + geom_point()  + xlab("Is Homeowner") + ylab("Average Default Rate") + ggtitle("Average Default Rate - Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5))
- 
+ data %>% group_by(is_homeowner) %>% summarize(mean_default = mean(default))%>%  ggplot(aes(is_homeowner,mean_default, fill = is_homeowner)) + geom_point()  + xlab("Homeowner Status") + ylab("Average Default Rate") + ggtitle("Average Default Rate by Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5))
 ```
-<br />
+
 The graphs above indicate that there exists a discrepancy between the average interest rate for those who are home owners and those who are not. Home owners are charged a lower interest rate; however, their default rate is not drastically more favorable. This presents an arbitrage opportunity, as previously explained. 
-
-
-Table Showing Average Interest Rate by Homeowner Status:
+<br />
+<br />
+**Table of Average Interest Rate by Homeowner Status**
 ```{r}
 mean_rate <- data %>% group_by(is_homeowner) %>% summarize(mean_rate = mean(borrower_rate))
 mean_rate
-
 ```
-
-Table Showing Average Default Rate by Homeowner Status: 
+<br />
+<br />
+**Table of Average Default Rate by Homeowner Status**
 ```{r}
 # Understand numerical impact on default 
 round(prop.table(table(data$is_homeowner, data$default),1),3) #1: each row adds up to 1. 
 ```
-
+These tables support the conclusions evidenced by the above graphs. We see that homeowners pay 17.3% interest on average, while non-home owners pay 19.5% on average. This 2.2% difference is not justified by the 1% difference in default rate (Homeowners default 4.2% of the time while non-home owners default 5.2% of the time). 
 <br />
-These tables support the conclusions evidenced by the above graphs. We see that homeowners pay 17.3% interest on average, while non-home owners pay 19.5% on average. This 2.2% difference is not justified by the 1% difference in default rate (Homeowners default 5.2% of the time while non-home owners default 0.42% of the time). 
-
+<br />
+**Arbitrage Opportunity Category 2:**
 
 ### Conclusion
