@@ -246,11 +246,11 @@ The above information shows us that is_homeowner has two levels, either TRUE, me
 ```{r, warning=FALSE}
 options(dplyr.summarise.inform = FALSE)
 # Graph of Home Ownership and Interest rate 
-data %>% group_by(is_homeowner) %>% summarize(mean_rate = mean(borrower_rate))%>%  ggplot(aes(is_homeowner,mean_rate, fill = is_homeowner)) + geom_col() + xlab("Homeowner Status") + ylab("Average Interest Rate") + ggtitle("Average Interest Rate by Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5))
+data %>% group_by(is_homeowner) %>% summarize(mean_rate = mean(borrower_rate))%>%  ggplot(aes(is_homeowner,mean_rate, fill = is_homeowner)) + geom_col() + xlab("Homeowner Status") + scale_y_continuous(limits = c(0,20)) + ylab("Average Interest Rate") + ggtitle("Average Interest Rate by Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5)) 
 
 # Graph of Home Ownership and Default
 data$default_numeric <- as.numeric(data$default)
- data %>% group_by(is_homeowner) %>% summarize(mean_default = mean(default))%>%  ggplot(aes(is_homeowner,mean_default, fill = is_homeowner)) + geom_point()  + xlab("Homeowner Status") + ylab("Average Default Rate") + ggtitle("Average Default Rate by Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5))
+ data %>% group_by(is_homeowner) %>% summarize(mean_default = mean(default))%>%  ggplot(aes(is_homeowner,mean_default, fill = is_homeowner)) + geom_col()  + xlab("Homeowner Status") + scale_y_continuous(limits = c(0,0.2)) + ylab("Average Default Rate") + ggtitle("Average Default Rate by Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5))
 ```
 
 The graphs above indicate that there exists a discrepancy between the average interest rate for those who are home owners and those who are not. Home owners are charged a lower interest rate; however, their default rate is not drastically more favorable. This presents an arbitrage opportunity, as previously explained. 
