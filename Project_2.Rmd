@@ -302,11 +302,17 @@ The graphs above indicate that there does not exist a change in interest rate ba
 
 ### Conclusion
 
-We began our analysis by exploring the data and building a correlation chart to make an educated guess about what variables might be significant in both models. For the linear model investigating the impact on the borrower rate, the two variables which we discovered had the largest positive and negative correlations respectively were bankcard_utilization and amount_funded. These variables ended up being significant in our model. However, the second highest positive correlation variable was was_delinquent_derog, which ended up not being significant. For the logistic model analyzing the default rate, bankcard_utilization had the highest positive correlation. However, it ended up not being a part of the model. We learned that although correlation is a decent predictor of what variables might be in the model, this is not always the case as some variables may encompass others. 
+**Dataset Investigation**
+
+We began our analysis by exploring the data and building a correlation chart to make an educated guess about what variables might be significant in both models. For the linear model investigating the impact on the borrower rate, the two variables which we discovered had the largest positive and negative correlations respectively were bankcard_utilization and amount_funded. These variables ended up being significant in our model. However, the second highest positive correlation variable was was_delinquent_derog, which ended up not being significant. For the logistic model analyzing the default rate, bankcard_utilization had the highest positive correlation. However, it ended up not being a part of the model. We learned that although correlation is a decent predictor of what variables might be in the model, this is not always the case as some variables may encompass others.
+
+**Accuracy of Models**
 
 Both models produced high accuracies, with the borrower rate and default rate models having 93.6% and 95.1% accuracy respectively. The adjusted R-squared for the borrower rate model was 0.9453, which indicates that the model is able to interpret 94.53% of the variance in the dataset. All variables in both models were significant.
 
-The goal for any lender is to increase the borrower rate while also mitigating the risk for a default. Through the development of a linear regression model investigating the loan borrower rate and a logistic regression model investigating the default rate, we uncovered several arbitrage opportunities that the issuer could exploit. Consequently, the default rate is not always positively correlated with the borrower rate, and the many other variables in the dataset were able to demonstrate that. 
+**Goals for Lender and Arbitrage Conclusion**
+
+The goal for any lender is to increase the borrower rate while also mitigating the risk for a default. Through the development of a linear regression model investigating the loan borrower rate and a logistic regression model investigating the default rate, we uncovered several arbitrage opportunities that the issuer could exploit. We segmented the opportunities for arbitrage into three different categories, discovering variables along the way that had a surprising affect on the models. Consequently, the default rate is not always positively correlated with the borrower rate, and the many other variables in the dataset were able to demonstrate that. 
 
 
 
