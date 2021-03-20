@@ -291,6 +291,13 @@ number_of_days_default <- ggplot(data = data, aes(number_of_days, default)) + ge
 number_of_days_default + theme(plot.title = element_text(hjust = 0.5))
 ```
 
-As we can see from our line of fit, the default rate has a hike at around 450 days. Even though it decreases at around 700 days, there is an observable pattern in this data.
+The graph above shows the incidences of default based on the numer of days. Those points corresponding to a 0 default rate did not default whereas those corresponding with a 1 did default. As we can see from our line of fit, the default rate has a hike starting at around 450 days. Even though it decreases at around 700 days, there is an observable pattern in this data and thus should be reflected in the interest rate charged. 
+<br />
+<br />
+The graphs above indicate that there does not exist a change in interest rate based on the number of days. However, the number of days, on average, should increase the odds of default and theerby interest rates. This presents an arbitrage opportunity, as previously explained. 
+<br />
+<br />
+<br />
+**Arbitrage Opportunity Category 3:**
 
 ### Conclusion
