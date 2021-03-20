@@ -271,6 +271,7 @@ round(prop.table(table(data$is_homeowner, data$default),1),3) #1: each row adds 
 These tables support the conclusions evidenced by the above graphs. We see that homeowners pay 17.3% interest on average, while non-home owners pay 19.5% on average. This 2.2% difference is not justified by the 1% difference in default rate (Homeowners default 4.2% of the time while non-home owners default 5.2% of the time). 
 <br />
 <br />
+<br />
 **Arbitrage Opportunity Category 2:**
 This category includes variables that do not impact interest rates however they do impact the probability of default. This means that the interest rates are not being adjusted for a premium or a discount in risk for a variable. 
 <br />
