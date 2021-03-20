@@ -89,7 +89,7 @@ The data above shows that people who defaulted received higher borrowing rate. T
 
 ```{r, message = FALSE, warning = FALSE, results = "hide"}
 baseplot <- ggplot(data = data, aes(x=bankcard_utilization, y = borrower_rate, colour=borrower_rate)) + xlab("Bankcard Utilization") + ylab ("Borrower Rate") + ggtitle("Borrower Rate vs Bankcard Utilization") + theme(plot.title = element_text(hjust = 0.5))
-baseplot+geom_smooth()
+baseplot + geom_smooth()
 ```
 
 In the graph above, we can see that the borrower rate increases as the bank card utilization increases. This is most likely due to reason that people who utilize bank card a lot are seen as financially distressed and more likely to default. therefore the credit risk is higher on these people. However, we can also see that when the bank card utilization is fairly low, the borrower rate actually decreases as the utilization increases. This might be because the bank encourages some level of utilization of the card by offering incentives to lower the borrowing rate to customers who utilize credit card until a certain point.
@@ -250,7 +250,7 @@ data %>% group_by(is_homeowner) %>% summarize(mean_rate = mean(borrower_rate))%>
 
 # Graph of Home Ownership and Default
 data$default_numeric <- as.numeric(data$default)
- data %>% group_by(is_homeowner) %>% summarize(mean_default = mean(default))%>%  ggplot(aes(is_homeowner,mean_default, fill = is_homeowner)) + geom_col()  + xlab("Homeowner Status") + scale_y_continuous(limits = c(0,0.2)) + ylab("Average Default Rate") + ggtitle("Average Default Rate by Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5))
+data %>% group_by(is_homeowner) %>% summarize(mean_default = mean(default))%>%  ggplot(aes(is_homeowner, mean_default, fill = is_homeowner)) + geom_col() + xlab("Homeowner Status") + scale_y_continuous(limits = c(0,0.2)) + ylab("Average Default Rate") + ggtitle("Average Default Rate by Homeowner Status") + guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5))
 ```
 
 The graphs above indicate that there exists a discrepancy between the average interest rate for those who are home owners and those who are not. Home owners are charged a lower interest rate; however, their default rate is not drastically more favorable. This presents an arbitrage opportunity, as previously explained. 
@@ -273,22 +273,21 @@ These tables support the conclusions evidenced by the above graphs. We see that 
 <br />
 **Arbitrage Opportunity Category 2:**
 This category includes variables that do not impact interest rates however they do impact the probability of default. This means that the interest rates are not being adjusted for a premium or a discount in risk for a variable. 
-
+<br />
+<br /> 
 We will use the variable number_of_days to observe this.
 
-``` {r}
-number_of_days_interest <- ggplot(data = data, aes(number_of_days, borrower_rate)) + geom_bin2d(bins = 25) + scale_fill_continuous(type = "viridis") + xlab("Number of Days") + ylab("Borrower Rate") + ggtitle("Borrower rate vs. Number of Days") + xlim(816, 971.2)
-number_of_days_interest
+``` {r, warning=FALSE}
+number_of_days_interest <- ggplot(data = data, aes(number_of_days, borrower_rate)) + geom_bin2d(bins = 25) + scale_fill_continuous(type = "viridis") + xlab("Number of Days") + ylab("Interest Rate") + ggtitle("Interest Rate vs Number of Days") + xlim(816, 971.2)
+number_of_days_interest + theme(plot.title = element_text(hjust = 0.5))
 ```
 
-As we can see from our density plot, there is no clear pattern between number of days and interest rates besides a slight lean towards shorter terms which was not significant enough to be picked up by our linear model
+As we can see from our density plot, there is no clear pattern between number of days and interest rates besides a slight lean towards shorter terms which was not significant enough to be picked up by our linear model. It is interesting to see that the number of days it took for the loan to default (or the number of days since the last observation of the loan) does not really impact interest rates. 
 
-``` {r}
-
+``` {r, message = FALSE, warning = FALSE, results = "hide"}
 # Graph of Number of Days and Default
 number_of_days_default <- ggplot(data = data, aes(number_of_days, default)) + geom_point(a = 0.5) + geom_smooth()+ scale_fill_continuous(type = "viridis") + xlab("Number of Days") + ylab("Default Rate") + ggtitle("Default Rate vs. Number of Days") 
-number_of_days_default
-
+number_of_days_default + theme(plot.title = element_text(hjust = 0.5))
 ```
 
 As we can see from our line of fit, the default rate has a hike at around 450 days. Even though it decreases at around 700 days, there is an observable pattern in this data.
