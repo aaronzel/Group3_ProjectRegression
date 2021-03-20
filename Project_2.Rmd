@@ -1,7 +1,7 @@
 ---
 title: "Project_2"
 author: "Sanjeev's SupeRstars: Aaron Zelmanov, Muhammad Hafizudeen Mohamad Saman, Nakul Chadha, Kendall Cohen, Michael Geraci"
-date: "2/21/2021"
+date: "3/21/2021"
 output:
   html_document:
     code_folding: hide
@@ -217,7 +217,7 @@ Viewing our outputs, our goal would be to pursue opportunities that increase int
 
 ### Arbitrage Analysis
 
-We segmented the opportunities for arbitrage into four different categories: 
+We segmented the opportunities for arbitrage into three different categories: 
 
 Category 1: Variables that impact interest rate but do not significantly impact default rate
 
@@ -291,13 +291,24 @@ number_of_days_default <- ggplot(data = data, aes(number_of_days, default)) + ge
 number_of_days_default + theme(plot.title = element_text(hjust = 0.5))
 ```
 
-The graph above shows the incidences of default based on the numer of days. Those points corresponding to a 0 default rate did not default whereas those corresponding with a 1 did default. As we can see from our line of fit, the default rate has a hike starting at around 450 days. Even though it decreases at around 700 days, there is an observable pattern in this data and thus should be reflected in the interest rate charged. 
+The graph above shows the incidences of default based on the number of days. Those points corresponding to a 0 default rate did not default whereas those corresponding with a 1 did default. As we can see from our line of fit, the default rate has a hike starting at around 450 days. Even though it decreases at around 700 days, there is an observable pattern in this data and thus should be reflected in the interest rate charged. 
 <br />
 <br />
-The graphs above indicate that there does not exist a change in interest rate based on the number of days. However, the number of days, on average, should increase the odds of default and theerby interest rates. This presents an arbitrage opportunity, as previously explained. 
+The graphs above indicate that there does not exist a change in interest rate based on the number of days. However, the number of days, on average, should increase the odds of default and thereby interest rates. This presents an arbitrage opportunity, as previously explained. 
 <br />
 <br />
 <br />
 **Arbitrage Opportunity Category 3:**
 
 ### Conclusion
+
+We began our analysis by exploring the data and building a correlation chart to make an educated guess about what variables might be significant in both models. For the linear model investigating the impact on the borrower rate, the two variables which we discovered had the largest positive and negative correlations respectively were bankcard_utilization and amount_funded. These variables ended up being significant in our model. However, the second highest positive correlation variable was was_delinquent_derog, which ended up not being significant. For the logistic model analyzing the default rate, bankcard_utilization had the highest positive correlation. However, it ended up not being a part of the model. We learned that although correlation is a decent predictor of what variables might be in the model, this is not always the case as some variables may encompass others. 
+
+Both models produced high accuracies, with the borrower rate and default rate models having 93.6% and 95.1% accuracy respectively. The adjusted R-squared for the borrower rate model was 0.9453, which indicates that the model is able to interpret 94.53% of the variance in the dataset. All variables in both models were significant.
+
+The goal for any lender is to increase the borrower rate while also mitigating the risk for a default. Through the development of a linear regression model investigating the loan borrower rate and a logistic regression model investigating the default rate, we uncovered several arbitrage opportunities that the issuer could exploit. Consequently, the default rate is not always positively correlated with the borrower rate, and the many other variables in the dataset were able to demonstrate that. 
+
+
+
+
+
