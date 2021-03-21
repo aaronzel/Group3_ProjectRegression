@@ -323,7 +323,29 @@ data %>% group_by(default) %>% summarize(median_bal = median(principal_balance))
 # Median Principal Balance on Default Status
 tapply(data$principal_balance, as.logical(data$default), median)
 ```
-However, as we can see, most people who defaulted do not even have a principal balance. This means that the market perceived people who has low principal balance as risky
+However, as we can see, most people who defaulted do not even have a principal balance. This means that the market correctly perceived people who has low principal balance as risky. This contradicts with our regression analysis that this variable affects the interest rate and the default rate in an opposite direction.
+
+Lets try to do some analysis on another variable that we found that potentially affects the interest rate and the default rate in an opposite direction: amount_funded
+
+
+```{r}
+ggplot(data=data, aes(x=amount_funded, y=borrower_rate)) + geom_point() + geom_smooth() + 
+  ggtitle("Borrower Rate vs Amount Funded") + xlab("Amount Funded")+ylab("Borrower Rate")
+```
+The graph above shows that amount_funded has a negative relationship to the borrower rate. This means that the market perceive people with higher amount funded to have lower risk, and thus give a lower interest rate.
+
+```{r}
+options(dplyr.summarise.inform = FALSE)
+# Graph of Amount Funded and Default 
+data %>% group_by(default) %>% summarize(mean_funded = mean(amount_funded))%>%  ggplot(aes(as.logical(default),mean_funded, fill = as.logical(default))) + geom_col() + xlab("Defaulted") +
+  ylab("Mean Amount Funded") + 
+  ggtitle("Mean Amount Funded on Default Status") + 
+  guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5)) 
+
+# Median Principal Balance on Default Status
+tapply(data$amount_funded, as.logical(data$default), mean)
+```
+The graph above shows that people who defaulted actually have lower amount funded. This means that the market  correctly predicted that people who have lower amount funded are likely to default. Thus, there is no arbitrage opportunity in this variable as well, which contradicts our initial result that this variable might affect the interest rate and the default rate in an opposite way.
 
 ### Conclusion
 
