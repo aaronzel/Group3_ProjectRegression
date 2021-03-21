@@ -300,7 +300,7 @@ The graphs above indicate that there does not exist a change in interest rate ba
 <br />
 **Arbitrage Opportunity Category 3:**
 
-This category includes variables that affect interest rate and default rate in opposite directions. This means that the borrower receives a higher interest despite having a lower risk of default, or the borrower receives lower interest rate despite having higher risk of default. 
+This category includes variables that affect interest rate and default rate in opposite directions. This means that the borrower receives a higher interest rate despite having a lower risk of default, or the borrower receives lower interest rate despite having higher risk of default. 
 <br />
 <br /> 
 One variable that we analyzed that has this property is principal_balance
@@ -323,7 +323,8 @@ data %>% group_by(default) %>% summarize(median_bal = median(principal_balance))
 # Median Principal Balance on Default Status
 tapply(data$principal_balance, as.logical(data$default), median)
 ```
-However, as we can see, most people who defaulted do not even have a principal balance. 
+However, as we can see, most people who defaulted do not even have a principal balance. This means that the market perceived people who has low principal balance as risky
+
 ### Conclusion
 
 **Dataset Investigation**
