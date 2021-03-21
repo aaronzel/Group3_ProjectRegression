@@ -300,6 +300,30 @@ The graphs above indicate that there does not exist a change in interest rate ba
 <br />
 **Arbitrage Opportunity Category 3:**
 
+This category includes variables that affect interest rate and default rate in opposite directions. This means that the borrower receives a higher interest despite having a lower risk of default, or the borrower receives lower interest rate despite having higher risk of default. 
+<br />
+<br /> 
+One variable that we analyzed that has this property is principal_balance
+
+```{r}
+ggplot(data=data, aes(x=principal_balance, y=borrower_rate)) + geom_point() + geom_smooth() + 
+  ggtitle("Borrower Rate vs Principal Balance") + xlab("Principal Balance")+ylab("Borrower Rate")
+```
+
+The graph above indicate that as principal_balance increase, the borrower rate actually decrease.
+
+```{r}
+options(dplyr.summarise.inform = FALSE)
+# Graph of principal_balance and Default 
+data %>% group_by(default) %>% summarize(median_bal = median(principal_balance))%>%  ggplot(aes(as.logical(default),median_bal, fill = as.logical(default))) + geom_col() + xlab("Defaulted") +
+  ylab("Median Principal Balance") + 
+  ggtitle("Median Principal Balance on Default Status") + 
+  guides(fill = FALSE) + theme(plot.title = element_text(hjust = 0.5)) 
+
+# Median Principal Balance on Default Status
+tapply(data$principal_balance, as.logical(data$default), median)
+```
+However, as we can see, most people who defaulted do not even have a principal balance. 
 ### Conclusion
 
 **Dataset Investigation**
